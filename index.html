@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>무상증자 시뮬레이터 Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: #f0f2f5;
+      color: #1e293b;
+      letter-spacing: -0.025em;
+    }
+    .input-focus-effect:focus {
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+      border-color: #6366f1;
+    }
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .transition-all { transition: all 0.3s ease; }
+  </style>
+</head>
+<body class="py-16 px-4">
+<div class="max-w-2xl mx-auto">
+
+  <header class="text-center mb-16">
+    <div class="inline-block px-4 py-1.5 mb-4 text-xs font-bold tracking-widest text-indigo-600 bg-indigo-50 rounded-full uppercase">Storage Enabled</div>
+    <h1 class="text-5xl font-extrabold text-slate-900 mb-4 tracking-tighter">무상증자 계산기</h1>
+    <p class="text-slate-500 text-lg font-medium">자동 저장 기능이 적용된 프리미엄 버전</p>
+  </header>
+
+  <section class="bg-white rounded-[2rem] shadow-2xl p-8 mb-12 border border-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
+    <h2 class="text-sm font-black text-indigo-500 uppercase tracking-tighter mb-8 flex items-center">
+      <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>기본 데이터 입력
+    </h2>
+    <div class="grid grid-cols-2 gap-6 relative z-10">
+      <div class="space-y-2">
+        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">나의 평단가</label>
+        <input type="number" id="in_avgPrice" value="10000" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-extrabold text-xl outline-none input-focus-effect transition-all">
+      </div>
+      <div class="space-y-2">
+        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">보유 주식수</label>
+        <input type="number" id="in_stockCount" value="100" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-extrabold text-xl outline-none input-focus-effect transition-all">
+      </div>
+      <div class="space-y-2">
+        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">증자 비율 (1:N)</label>
+        <input type="number" id="in_ratio" value="1" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-extrabold text-xl outline-none input-focus-effect transition-all">
+      </div>
+      <div class="space-y-2">
+        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">권리락 전 주가</label>
+        <input type="number" id="in_currentPrice" value="12000" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-extrabold text-xl outline-none input-focus-effect transition-all">
+      </div>
+    </div>
+  </section>
+
+  <div class="space-y-10">
+    <div class="bg-white rounded-[2rem] shadow-lg p-8 border-t-4 border-slate-300">
+      <div class="flex items-center mb-8 text-xl font-bold text-slate-800">
+        <div class="w-10 h-10 bg-slate-800 text-white rounded-2xl flex items-center justify-center font-black mr-4 text-sm shadow-md">01</div>
+        권리락 전 <span class="text-slate-300 font-medium ml-2 text-base">Current</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <div class="text-center"><p class="text-[10px] font-bold text-slate-400 mb-1">주가</p><p class="font-bold" id="s1_price">-</p></div>
+        <div class="text-center"><p class="text-[10px] font-bold text-slate-400 mb-1">평단가</p><p class="font-bold" id="s1_avg">-</p></div>
+        <div class="text-center"><p class="text-[10px] font-bold text-slate-400 mb-1">주식수</p><p class="font-bold" id="s1_count">-</p></div>
+        <div class="text-center bg-indigo-50 py-2 rounded-xl"><p class="text-[10px] font-bold text-indigo-400 mb-1">수익률</p><p class="font-black text-indigo-600" id="s1_roc">-</p></div>
+        <div class="text-center bg-indigo-50 py-2 rounded-xl"><p class="text-[10px] font-bold text-indigo-400 mb-1">수익금</p><p class="font-black text-indigo-600" id="s1_profit">-</p></div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-[2rem] shadow-lg p-8 border-t-4 border-amber-400">
+      <div class="flex items-center mb-8 text-xl font-bold text-slate-800">
+        <div class="w-10 h-10 bg-amber-400 text-white rounded-2xl flex items-center justify-center font-black mr-4 text-sm shadow-md">02</div>
+        권리락 당일 <span class="text-amber-500 font-medium ml-2 text-sm italic">착시 주의</span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <div class="text-center"><p class="text-[10px] font-bold text-slate-400 mb-1">권리락가</p><p class="font-bold" id="s2_price">-</p></div>
+        <div class="text-center"><p class="text-[10px] font-bold text-slate-400 mb-1">평단가</p><p class="font-bold" id="s2_avg">-</p></div>
+        <div class="text-center"><p class="text-[10px] font-bold text-slate-400 mb-1">주식수</p><p class="font-bold" id="s2_count">-</p></div>
+        <div class="text-center bg-rose-50 py-2 rounded-xl"><p class="text-[10px] font-bold text-rose-400 mb-1">수익률</p><p class="font-black text-rose-500" id="s2_roc">-</p></div>
+        <div class="text-center bg-rose-50 py-2 rounded-xl"><p class="text-[10px] font-bold text-rose-400 mb-1">수익금</p><p class="font-black text-rose-500" id="s2_profit">-</p></div>
+      </div>
+    </div>
+
+    <div class="bg-emerald-900 rounded-[2rem] shadow-xl p-8 text-white">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+        <div class="flex items-center text-xl font-bold">
+          <div class="w-10 h-10 bg-emerald-400 text-emerald-900 rounded-2xl flex items-center justify-center font-black mr-4 text-sm shadow-md">03</div>
+          상장 전 일부 매도
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="relative">
+            <span class="absolute left-3 top-2.5 text-[9px] font-bold text-emerald-400 uppercase">Qty</span>
+            <input type="number" id="in_sellCount" placeholder="주수" class="w-24 bg-white/10 border border-white/20 rounded-xl px-3 pt-5 pb-2 text-sm outline-none focus:bg-white/20 font-bold">
+          </div>
+          <div class="relative">
+            <span class="absolute left-3 top-2.5 text-[9px] font-bold text-emerald-400 uppercase">Price</span>
+            <input type="number" id="in_sellPrice" placeholder="가격" class="w-28 bg-white/10 border border-white/20 rounded-xl px-3 pt-5 pb-2 text-sm outline-none focus:bg-white/20 font-bold">
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center">
+        <div class="bg-white/5 py-3 rounded-2xl border border-white/10"><p class="text-[10px] font-bold text-emerald-300 mb-1 uppercase">권리락가 대비</p><p class="font-black text-emerald-400" id="s3_priceChange">-</p></div>
+        <div class="py-3"><p class="text-[10px] font-bold text-emerald-300/60 mb-1">수정평단</p><p class="font-bold text-emerald-100 italic text-xs">Fixed</p></div>
+        <div class="py-3"><p class="text-[10px] font-bold text-emerald-300/60 mb-1">잔여 주수</p><p class="font-bold text-emerald-100" id="s3_count">-</p></div>
+        <div class="py-3"><p class="text-[10px] font-bold text-emerald-300/60 mb-1">매도 수익률</p><p class="font-bold text-emerald-100" id="s3_roc">-</p></div>
+        <div class="py-3"><p class="text-[10px] font-bold text-emerald-300/60 mb-1">실현 수익금</p><p class="font-bold text-emerald-100" id="s3_realized">-</p></div>
+      </div>
+    </div>
+
+    <div class="bg-indigo-600 rounded-[2rem] shadow-2xl p-10 text-white relative overflow-hidden">
+      <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full"></div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
+        <div class="flex items-center text-2xl font-black">
+          <div class="w-10 h-10 bg-white text-indigo-600 rounded-2xl flex items-center justify-center font-black mr-4 text-sm shadow-md">04</div>
+          신주 상장일
+        </div>
+        <div class="flex items-center gap-3 bg-white/10 p-2 rounded-2xl backdrop-blur-md">
+          <span class="text-[11px] font-bold text-indigo-100 ml-2 uppercase">Target</span>
+          <input type="number" id="in_finalPrice" class="w-32 bg-white border-none rounded-xl px-4 py-3 text-indigo-900 outline-none font-black text-lg">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-6">
+        <div class="bg-black/10 py-5 rounded-3xl border border-white/10 text-center"><p class="text-[10px] font-bold text-indigo-200 mb-1">최종주가</p><p class="text-lg font-black" id="s4_price">-</p></div>
+        <div class="bg-black/10 py-5 rounded-3xl border border-white/10 text-center"><p class="text-[10px] font-bold text-indigo-200 mb-1">수정평단</p><p class="text-lg font-black" id="s4_avg">-</p></div>
+        <div class="bg-black/10 py-5 rounded-3xl border border-white/10 text-center"><p class="text-[10px] font-bold text-indigo-200 mb-1">최종주수</p><p class="text-lg font-black" id="s4_count">-</p></div>
+        <div class="col-span-2 bg-white p-6 rounded-3xl shadow-inner"><p class="text-[11px] font-black text-slate-400 mb-1 uppercase text-center">합산 수익률</p><p class="text-4xl font-black text-indigo-600 text-center" id="s4_roc">-</p><p class="text-center text-indigo-400 font-bold mt-1 text-sm" id="s4_profit">-</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const inputs = ['in_avgPrice', 'in_stockCount', 'in_ratio', 'in_currentPrice', 'in_sellCount', 'in_sellPrice', 'in_finalPrice'];
+
+  // 초기 로드 시 실행
+  window.addEventListener('DOMContentLoaded', () => {
+    loadSavedData();
+    calc();
+  });
+
+  inputs.forEach(id => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      if (e.target.id === 'in_sellPrice' || e.target.id === 'in_finalPrice') {
+        e.target.dataset.manual = "true";
+      }
+      saveData();
+      calc();
+    });
+  });
+
+  // 데이터 로컬 스토리지에 저장
+  function saveData() {
+    const data = {};
+    inputs.forEach(id => {
+      const el = document.getElementById(id);
+      data[id] = {
+        val: el.value,
+        manual: el.dataset.manual || "false"
+      };
+    });
+    localStorage.setItem('bonus_issue_calc_data', JSON.stringify(data));
+  }
+
+  // 로컬 스토리지에서 데이터 불러오기
+  function loadSavedData() {
+    const saved = localStorage.getItem('bonus_issue_calc_data');
+    if (saved) {
+      const data = JSON.parse(saved);
+      Object.keys(data).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = data[id].val;
+          el.dataset.manual = data[id].manual;
+        }
+      });
+    }
+  }
+
+  function calc() {
+    const avgP = parseFloat(document.getElementById('in_avgPrice').value) || 0;
+    const cnt = parseFloat(document.getElementById('in_stockCount').value) || 0;
+    const ratio = parseFloat(document.getElementById('in_ratio').value) || 0;
+    const curP = parseFloat(document.getElementById('in_currentPrice').value) || 0;
+
+    if(avgP <= 0 || cnt <= 0) return;
+
+    const modAvg = Math.round(avgP / (1 + ratio));
+    const exP = Math.floor(curP / (1 + ratio));
+
+    const sellPriceIn = document.getElementById('in_sellPrice');
+    const finalPriceIn = document.getElementById('in_finalPrice');
+
+    // 수동 입력이 아닐 때만 자동 연동
+    if (sellPriceIn.dataset.manual !== "true") sellPriceIn.value = modAvg;
+    if (finalPriceIn.dataset.manual !== "true") finalPriceIn.value = modAvg;
+
+    const sP = parseFloat(sellPriceIn.value) || 0;
+    const fP = parseFloat(finalPriceIn.value) || 0;
+    const sCnt = parseFloat(document.getElementById('in_sellCount').value) || 0;
+    const totalInv = avgP * cnt;
+
+    render('s1', curP, avgP, cnt, (curP * cnt) - totalInv, totalInv);
+    render('s2', exP, avgP, cnt, (exP * cnt) - totalInv, totalInv);
+
+    const priceChange = sP > 0 ? (((sP - exP) / exP) * 100).toFixed(2) + "%" : "-";
+    document.getElementById('s3_priceChange').innerText = priceChange;
+    const realized = sCnt * sP;
+    const remain = cnt - sCnt;
+    const s3_roc = sP > 0 ? (((sP - modAvg) / modAvg) * 100).toFixed(2) + "%" : "-";
+    document.getElementById('s3_count').innerText = remain.toLocaleString() + "주";
+    document.getElementById('s3_realized').innerText = realized.toLocaleString() + "원";
+    document.getElementById('s3_roc').innerText = s3_roc;
+
+    const finalCnt = remain + (cnt * ratio);
+    const finalVal = (finalCnt * fP) + realized;
+    const finalProfit = finalVal - totalInv;
+
+    document.getElementById('s4_price').innerText = fP.toLocaleString() + "원";
+    document.getElementById('s4_avg').innerText = modAvg.toLocaleString() + "원";
+    document.getElementById('s4_count').innerText = finalCnt.toLocaleString() + "주";
+    document.getElementById('s4_roc').innerText = ((finalProfit/totalInv)*100).toFixed(2) + "%";
+    document.getElementById('s4_profit').innerText = "총 손익: " + finalProfit.toLocaleString() + "원";
+  }
+
+  function render(pre, p, a, c, prof, inv) {
+    document.getElementById(pre+'_price').innerText = p.toLocaleString() + "원";
+    document.getElementById(pre+'_avg').innerText = a.toLocaleString() + "원";
+    document.getElementById(pre+'_count').innerText = c.toLocaleString() + "주";
+    document.getElementById(pre+'_roc').innerText = ((prof/inv)*100).toFixed(2) + "%";
+    document.getElementById(pre+'_profit').innerText = prof.toLocaleString() + "원";
+  }
+</script>
+</body>
+</html>
