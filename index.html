@@ -13,9 +13,30 @@
       color: #1e293b;
       letter-spacing: -0.025em;
     }
-    .input-focus-effect:focus {
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
-      border-color: #6366f1;
+    .user-input-field {
+      background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%) !important;
+      border: 3px dashed #eab308 !important;
+      box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .user-input-field:focus {
+      border-style: solid !important;
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3), 0 4px 12px rgba(234, 179, 8, 0.3) !important;
+      transform: translateY(-1px);
+    }
+    .user-input-field::placeholder {
+      color: #a16207 !important;
+      opacity: 0.7;
+    }
+    .input-label {
+      background: #fef9c3;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #a16207;
+      display: inline-block;
+      margin-bottom: 4px;
     }
     input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .transition-all { transition: all 0.3s ease; }
@@ -30,25 +51,28 @@
 
   <section class="bg-white rounded-[2rem] shadow-2xl p-8 mb-12 border border-white relative overflow-hidden">
     <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
-    <h2 class="text-sm font-black text-indigo-500 uppercase tracking-tighter mb-8 flex items-center">
-      <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>기본 데이터 입력
-    </h2>
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-sm font-black text-indigo-500 uppercase tracking-tighter flex items-center">
+        <span class="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>기본 데이터 입력
+      </h2>
+      <span class="text-[9px] bg-yellow-100 text-yellow-700 px-2 py-1 rounded font-bold">필수 입력</span>
+    </div>
     <div class="grid grid-cols-2 gap-6 relative z-10">
       <div class="space-y-2">
-        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">나의 평단가</label>
-        <input type="number" id="in_avgPrice" value="10000" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-extrabold text-xl outline-none input-focus-effect transition-all">
+        <label class="input-label">나의 평단가</label>
+        <input type="number" id="in_avgPrice" value="10000" class="w-full rounded-2xl p-4 font-extrabold text-xl outline-none user-input-field transition-all" placeholder="입력하세요">
       </div>
       <div class="space-y-2">
-        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">보유 주식수</label>
-        <input type="number" id="in_stockCount" value="100" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-extrabold text-xl outline-none input-focus-effect transition-all">
+        <label class="input-label">보유 주식수</label>
+        <input type="number" id="in_stockCount" value="100" class="w-full rounded-2xl p-4 font-extrabold text-xl outline-none user-input-field transition-all" placeholder="입력하세요">
       </div>
       <div class="space-y-2">
-        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">증자 비율 (1:N)</label>
-        <input type="number" id="in_ratio" value="1" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-extrabold text-xl outline-none input-focus-effect transition-all">
+        <label class="input-label">증자 비율 (1:N)</label>
+        <input type="number" id="in_ratio" value="1" class="w-full rounded-2xl p-4 font-extrabold text-xl outline-none user-input-field transition-all" placeholder="입력하세요">
       </div>
       <div class="space-y-2">
-        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider ml-1">권리락 전 주가</label>
-        <input type="number" id="in_currentPrice" value="12000" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 font-extrabold text-xl outline-none input-focus-effect transition-all">
+        <label class="input-label">권리락 전 주가</label>
+        <input type="number" id="in_currentPrice" value="12000" class="w-full rounded-2xl p-4 font-extrabold text-xl outline-none user-input-field transition-all" placeholder="입력하세요">
       </div>
     </div>
 
@@ -58,10 +82,11 @@
   </section>
 
   <div class="space-y-10">
-    <div class="bg-white rounded-[2rem] shadow-lg p-8 border-t-4 border-slate-300">
+    <div class="bg-white rounded-[2rem] shadow-lg p-8 border-t-4 border-b-4 border-slate-300">
       <div class="flex items-center mb-8 text-xl font-bold text-slate-800">
         <div class="w-10 h-10 bg-slate-800 text-white rounded-2xl flex items-center justify-center font-black mr-4 text-sm shadow-md">01</div>
         권리락 전 <span class="text-slate-300 font-medium ml-2 text-base">Current</span>
+        <span class="ml-auto text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-lg font-bold">자동 계산</span>
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
         <div class="text-center"><p class="text-[10px] font-bold text-slate-400 mb-1">주가</p><p class="font-bold" id="s1_price">-</p></div>
@@ -75,10 +100,11 @@
       <iframe src="https://ads-partners.coupang.com/widgets.html?id=968596&template=carousel&trackingCode=AF1128978&subId=&width=680&height=140&tsource=" width="100%" height="140" frameborder="0" scrolling="no" referrerpolicy="unsafe-url" browsingtopics></iframe>
     </div>
 
-    <div class="bg-white rounded-[2rem] shadow-lg p-8 border-t-4 border-amber-400">
+    <div class="bg-white rounded-[2rem] shadow-lg p-8 border-t-4 border-b-4 border-amber-400">
       <div class="flex items-center mb-8 text-xl font-bold text-slate-800">
         <div class="w-10 h-10 bg-amber-400 text-white rounded-2xl flex items-center justify-center font-black mr-4 text-sm shadow-md">02</div>
         권리락 당일 <span class="text-amber-500 font-medium ml-2 text-sm italic">착시 주의</span>
+        <span class="ml-auto text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded-lg font-bold">자동 계산</span>
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
         <div class="text-center"><p class="text-[10px] font-bold text-slate-400 mb-1">권리락가</p><p class="font-bold" id="s2_price">-</p></div>
@@ -92,21 +118,21 @@
       <iframe src="https://ads-partners.coupang.com/widgets.html?id=968596&template=carousel&trackingCode=AF1128978&subId=&width=680&height=140&tsource=" width="100%" height="140" frameborder="0" scrolling="no" referrerpolicy="unsafe-url" browsingtopics></iframe>
     </div>
 
-    <div class="bg-emerald-900 rounded-[2rem] shadow-xl p-8 text-white">
+    <div class="bg-emerald-900 rounded-[2rem] shadow-xl p-8 text-white border-t-4 border-b-4 border-emerald-400">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div class="flex items-center text-xl font-bold">
           <div class="w-10 h-10 bg-emerald-400 text-emerald-900 rounded-2xl flex items-center justify-center font-black mr-4 text-sm shadow-md">03</div>
           상장 전 일부 매도
         </div>
-        <div class="flex items-center gap-2">
-          <div class="relative">
-            <span class="absolute left-3 top-2.5 text-[9px] font-bold text-emerald-400 uppercase">Qty</span>
-            <input type="number" id="in_sellCount" placeholder="주수" class="w-24 bg-white/10 border border-white/20 rounded-xl px-3 pt-5 pb-2 text-sm outline-none focus:bg-white/20 font-bold">
-          </div>
-          <div class="relative">
-            <span class="absolute left-3 top-2.5 text-[9px] font-bold text-emerald-400 uppercase">Price</span>
-            <input type="number" id="in_sellPrice" placeholder="가격" class="w-28 bg-white/10 border border-white/20 rounded-xl px-3 pt-5 pb-2 text-sm outline-none focus:bg-white/20 font-bold">
-          </div>
+      </div>
+      <div class="flex items-center gap-2 mb-6">
+        <div class="relative">
+          <label class="input-label">매도 주수</label>
+          <input type="number" id="in_sellCount" placeholder="입력" class="w-28 bg-white/20 rounded-xl px-4 py-3 text-sm outline-none user-input-field transition-all font-bold text-black placeholder:text-yellow-700">
+        </div>
+        <div class="relative">
+          <label class="input-label">매도 단가</label>
+          <input type="number" id="in_sellPrice" placeholder="입력" class="w-32 bg-white/20 rounded-xl px-4 py-3 text-sm outline-none user-input-field transition-all font-bold text-black placeholder:text-yellow-700">
         </div>
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center">
@@ -121,17 +147,17 @@
       <iframe src="https://ads-partners.coupang.com/widgets.html?id=968596&template=carousel&trackingCode=AF1128978&subId=&width=680&height=140&tsource=" width="100%" height="140" frameborder="0" scrolling="no" referrerpolicy="unsafe-url" browsingtopics></iframe>
     </div>
 
-    <div class="bg-indigo-600 rounded-[2rem] shadow-2xl p-10 text-white relative overflow-hidden">
+    <div class="bg-indigo-600 rounded-[2rem] shadow-2xl p-10 text-white relative overflow-hidden border-t-4 border-b-4 border-yellow-400">
       <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full"></div>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
         <div class="flex items-center text-2xl font-black">
           <div class="w-10 h-10 bg-white text-indigo-600 rounded-2xl flex items-center justify-center font-black mr-4 text-sm shadow-md">04</div>
           신주 상장일
         </div>
-        <div class="flex items-center gap-3 bg-white/10 p-2 rounded-2xl backdrop-blur-md">
-          <span class="text-[11px] font-bold text-indigo-100 ml-2 uppercase">Target</span>
-          <input type="number" id="in_finalPrice" class="w-32 bg-white border-none rounded-xl px-4 py-3 text-indigo-900 outline-none font-black text-lg">
-        </div>
+      </div>
+      <div class="flex items-center gap-3 bg-indigo-900/50 p-3 rounded-2xl backdrop-blur-md border-2 border-yellow-400/50 mb-6">
+        <label class="input-label">목표 주가</label>
+        <input type="number" id="in_finalPrice" class="w-32 bg-white border-2 border-yellow-400 rounded-xl px-4 py-3 text-indigo-900 outline-none user-input-field transition-all font-black text-lg" placeholder="입력">
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-6">
         <div class="bg-black/10 py-5 rounded-3xl border border-white/10 text-center"><p class="text-[10px] font-bold text-indigo-200 mb-1">최종주가</p><p class="text-lg font-black" id="s4_price">-</p></div>
